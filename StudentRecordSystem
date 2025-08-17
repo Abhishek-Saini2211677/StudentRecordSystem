@@ -1,0 +1,150 @@
+import java.util.*;
+
+class Student {
+    private int rollNo;
+    private String name;
+    private String course;
+    private int marks;
+
+    public Student(int rollNo, String name, String course, int marks) {
+        this.rollNo = rollNo;
+        this.name = name;
+        this.course = course;
+        this.marks = marks;
+    }
+
+    // Getters and Setters
+    public int getRollNo() { return rollNo; }
+    public String getName() { return name; }
+    public String getCourse() { return course; }
+    public int getMarks() { return marks; }
+
+    public void setName(String name) { this.name = name; }
+    public void setCourse(String course) { this.course = course; }
+    public void setMarks(int marks) { this.marks = marks; }
+
+    @Override
+    public String toString() {
+        return rollNo + " | " + name + " | " + course + " | " + marks;
+    }
+}
+
+public class StudentRecordSystem {
+    private static ArrayList<Student> studentList = new ArrayList<>();
+    private static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int choice;
+        do {
+            System.out.println("\n=== Student Record System ===");
+            System.out.println("1. Add Student");
+            System.out.println("2. View All Students");
+            System.out.println("3. Search Student");
+            System.out.println("4. Update Student");
+            System.out.println("5. Delete Student");
+            System.out.println("6. Sort Students by Marks");
+            System.out.println("7. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1 -> addStudent();
+                case 2 -> viewStudents();
+                case 3 -> searchStudent();
+                case 4 -> updateStudent();
+                case 5 -> deleteStudent();
+                case 6 -> sortStudents();
+                case 7 -> System.out.println("Exiting... Goodbye!");
+                default -> System.out.println("Invalid choice. Try again.");
+            }
+        } while (choice != 7);
+    }
+
+    // Add new student
+    private static void addStudent() {
+        System.out.print("Enter Roll No: ");
+        int rollNo = sc.nextInt();
+        sc.nextLine(); // consume newline
+        System.out.print("Enter Name: ");
+        String name = sc.nextLine();
+        System.out.print("Enter Course: ");
+        String course = sc.nextLine();
+        System.out.print("Enter Marks: ");
+        int marks = sc.nextInt();
+
+        studentList.add(new Student(rollNo, name, course, marks));
+        System.out.println("Student added successfully!");
+    }
+
+    // View all students
+    private static void viewStudents() {
+        if (studentList.isEmpty()) {
+            System.out.println("No students found.");
+            return;
+        }
+        System.out.println("\nRollNo | Name | Course | Marks");
+        System.out.println("-----------------------------------");
+        for (Student s : studentList) {
+            System.out.println(s);
+        }
+    }
+
+    // Search student by roll number
+    private static void searchStudent() {
+        System.out.print("Enter Roll No to search: ");
+        int rollNo = sc.nextInt();
+        for (Student s : studentList) {
+            if (s.getRollNo() == rollNo) {
+                System.out.println("Found: " + s);
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    // Update student details
+    private static void updateStudent() {
+        System.out.print("Enter Roll No to update: ");
+        int rollNo = sc.nextInt();
+        for (Student s : studentList) {
+            if (s.getRollNo() == rollNo) {
+                sc.nextLine(); // consume newline
+                System.out.print("Enter new Name: ");
+                s.setName(sc.nextLine());
+                System.out.print("Enter new Course: ");
+                s.setCourse(sc.nextLine());
+                System.out.print("Enter new Marks: ");
+                s.setMarks(sc.nextInt());
+                System.out.println("Student updated successfully!");
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    // Delete student
+    private static void deleteStudent() {
+        System.out.print("Enter Roll No to delete: ");
+        int rollNo = sc.nextInt();
+        Iterator<Student> it = studentList.iterator();
+        while (it.hasNext()) {
+            if (it.next().getRollNo() == rollNo) {
+                it.remove();
+                System.out.println("Student deleted successfully!");
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    // Sort students by marks
+    private static void sortStudents() {
+        if (studentList.isEmpty()) {
+            System.out.println("No students to sort.");
+            return;
+        }
+        studentList.sort(Comparator.comparingInt(Student::getMarks).reversed());
+        System.out.println("Students sorted by marks (High to Low):");
+        viewStudents();
+    }
+}
